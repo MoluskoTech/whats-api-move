@@ -97,6 +97,7 @@ export class Client extends EventEmitter {
       await this.page.setViewport({ width: 1920, height: 1080 })
       this.page.setBypassCSP(true)
       await this.page.goto('https://web.whatsapp.com/')
+      await this.page.reload()
       this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
       this.page.on('error', (err) => {
         if (this.firstError) {
@@ -106,7 +107,7 @@ export class Client extends EventEmitter {
               path: join(this.pathScreen, 'error.png'),
             })
             this.initialize()
-          }, 7000)
+          }, 15000)
           this.page.screenshot({
             path: join(__dirname, '..', 'public', 'example.png'),
           })
@@ -119,7 +120,7 @@ export class Client extends EventEmitter {
           setTimeout(() => {
             console.log('rodando timeout')
             this.initialize()
-          }, 7000)
+          }, 15000)
           this.page.screenshot({
             path: join(this.pathScreen, 'error.png'),
           })
