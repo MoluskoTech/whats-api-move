@@ -70,6 +70,17 @@ export class Client extends EventEmitter {
     return new Client(browser, page)
   }
 
+  async reset() {
+    const launchOptions = {
+      headless: true,
+      // userDataDir: 'tete1',
+      executablePath: env.PUPPETEER_EXECUTABLE_PATH,
+    } as PuppeteerLaunchOptions
+
+    this.browser = await puppeteer.launch(launchOptions)
+    this.page = await this.browser.newPage()
+  }
+
   firstError = true
 
   handlePageError(pageError: any) {
@@ -106,7 +117,9 @@ export class Client extends EventEmitter {
             this.page.screenshot({
               path: join(this.pathScreen, 'error.png'),
             })
-            this.initialize()
+            this.reset().then(() => {
+              this.initialize()
+            })
           }, 15000)
           this.page.screenshot({
             path: join(__dirname, '..', 'public', 'example.png'),
@@ -119,7 +132,9 @@ export class Client extends EventEmitter {
         if (this.firstError) {
           setTimeout(() => {
             console.log('rodando timeout')
-            this.initialize()
+            this.reset().then(() => {
+              this.initialize()
+            })
           }, 15000)
           this.page.screenshot({
             path: join(this.pathScreen, 'error.png'),
