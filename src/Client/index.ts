@@ -69,6 +69,9 @@ export class Client extends EventEmitter {
 
   async initialize() {
     try {
+      this.loading = false
+      this.needsQr = true
+      this.status = 'Authenticate'
       await this.page.setUserAgent(
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1 Safari/605.1.15',
       )
@@ -78,6 +81,7 @@ export class Client extends EventEmitter {
       this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
       this.page.on('error', (err) => {
         if (this.firstError) {
+          this.initialize()
           this.page.screenshot({
             path: join(__dirname, '..', 'public', 'example.png'),
           })
@@ -88,6 +92,7 @@ export class Client extends EventEmitter {
       })
       this.page.on('pageerror', (pageerr) => {
         if (this.firstError) {
+          this.initialize()
           this.page.screenshot({
             path: join(__dirname, '..', 'public', 'example.png'),
           })
@@ -177,11 +182,10 @@ export class Client extends EventEmitter {
     if (!this.loading && this.needsQr) {
       try {
         console.log('Buscando mensagem de carregamento')
-        /* const loadingMessage = await this.page.waitForXPath(
+        const loadingMessage = await this.page.waitForXPath(
           '//div[contains(text(), "Carregando suas conversas")]',
           { timeout: 500 },
-        ) */
-        const loadingMessage = null
+        )
         if (loadingMessage) {
           console.log('mensagem de carregamento existe')
           this.page.screenshot({

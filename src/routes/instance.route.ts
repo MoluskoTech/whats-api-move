@@ -43,7 +43,6 @@ export async function instanceRoutes(app: FastifyInstance) {
       preHandler: [checkApiIsReady],
     },
     async (request: FastifyRequest, reply: FastifyReply) => {
-      console.log(request.body)
       try {
         const schema = z.object({
           message: z.string(),
