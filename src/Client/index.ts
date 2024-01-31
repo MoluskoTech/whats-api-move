@@ -54,8 +54,8 @@ export class Client extends EventEmitter {
 
   private pathScreen =
     env.NODE_ENV === 'development'
-      ? join(__dirname, '..', '..', 'public', 'example.png')
-      : join(__dirname, '..', 'public', 'example.png')
+      ? join(__dirname, '..', '..', 'public')
+      : join(__dirname, '..', 'public')
 
   static async create({ headless }: Initialize) {
     const launchOptions = {
