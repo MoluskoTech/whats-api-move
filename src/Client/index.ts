@@ -99,6 +99,9 @@ export class Client extends EventEmitter {
     } catch (e) {
       if (e instanceof TimeoutError) {
         console.log('Não achou landing-page')
+        this.page.screenshot({
+          path: join(__dirname, '..', 'public', 'example.png'),
+        })
       }
     }
   }
