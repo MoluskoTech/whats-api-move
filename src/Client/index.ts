@@ -74,9 +74,18 @@ export class Client extends EventEmitter {
       this.page.setBypassCSP(true)
       await this.page.goto('https://web.whatsapp.com/')
       this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
-      this.page.on('error', (err) => console.log('PAGE ERROR:', err))
-      this.page.on('pageerror', (pageerr) =>
+      this.page.on('error', (err) => {
+        this.page.screenshot({
+          path: join(__dirname, '..', 'public', 'example.png'),
+        })
+        console.log('PAGE ERROR:', err)
+      })
+      this.page.on('pageerror', (pageerr) =>{
+        this.page.screenshot({
+          path: join(__dirname, '..', 'public', 'example.png'),
+        })
         console.log('PAGE ERROR:', pageerr),
+      }
       )
 
       const element = await this.page.waitForSelector('div > .landing-title', {
