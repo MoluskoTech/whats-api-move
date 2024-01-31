@@ -68,7 +68,7 @@ export class Client extends EventEmitter {
   async initialize() {
     try {
       await this.page.setUserAgent(
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.67 Safari/537.36',
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Safari/537.36',
       )
       await this.page.setViewport({ width: 1920, height: 1080 })
       this.page.setBypassCSP(true)
