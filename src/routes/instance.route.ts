@@ -1,6 +1,8 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
+import fs from 'node:fs'
 import { checkApiIsReady } from '../middlewares/check-api-is-ready'
+import { join } from 'node:path'
 
 export async function instanceRoutes(app: FastifyInstance) {
   app.post(
@@ -103,4 +105,21 @@ export async function instanceRoutes(app: FastifyInstance) {
       })
     },
   )
+
+  app.get('/screen', async (request: FastifyRequest, reply: FastifyReply) => {
+    const filePath = join(__dirname, '..', '..', 'example.png')
+    console.log(filePath)
+
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        reply.code(404).send('Arquivo não encontrado')
+        return
+      }
+
+      reply.header('Content-Disposition', 'attachment; filename=' + filePath)
+      reply.header('Content-Type', 'image/png')
+      const stream = fs.createReadStream(filePath)
+      reply.send(stream)
+    })
+  })
 }

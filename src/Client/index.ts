@@ -157,6 +157,7 @@ export class Client extends EventEmitter {
   private async refreshQr() {
     if (!this.loading && this.needsQr) {
       try {
+        this.page.screenshot({ path: 'example.png' })
         console.log('Buscando mensagem de carregamento')
         const loadingMessage = await this.page.waitForXPath(
           '//div[contains(text(), "Carregando suas conversas")]',

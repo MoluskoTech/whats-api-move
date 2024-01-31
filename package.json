@@ -33,6 +33,7 @@
     "dotenv": "^16.3.1",
     "fastify": "^4.24.3",
     "fastify-websocket": "^4.3.0",
+    "form-data": "^4.0.0",
     "puppeteer": "^21.7.0",
     "whatsapp-web.js": "^1.23.0",
     "zod": "^3.22.4"
