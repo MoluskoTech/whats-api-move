@@ -128,17 +128,20 @@ export class Client extends EventEmitter {
 
   private async waitForLoadingMessageExit() {
     try {
+      console.log('Buscando mensagem de carregamento')
       const loadingMessage = await this.page.waitForXPath(
         '//div[contains(text(), "Carregando suas conversas")]',
         { timeout: 500 },
       )
       if (loadingMessage) {
+        console.log('achou, loop')
         setTimeout(() => {
           this.waitForLoadingMessageExit()
         }, 1000)
       }
     } catch (e) {
       if (e instanceof TimeoutError) {
+        console.log('Não encontrou mensagem de carregamento')
         await this.saveLocalStorage()
         this.page.setBypassCSP(true)
 
@@ -154,6 +157,7 @@ export class Client extends EventEmitter {
   private async refreshQr() {
     if (!this.loading && this.needsQr) {
       try {
+        console.log('Buscando mensagem de carregamento')
         const loadingMessage = await this.page.waitForXPath(
           '//div[contains(text(), "Carregando suas conversas")]',
           { timeout: 500 },
@@ -173,6 +177,7 @@ export class Client extends EventEmitter {
     }
 
     if (this.needsQr) {
+      console.log('Buscando Qr')
       const reloadButton = await this.page.$('button')
       if (reloadButton) {
         await this.page.waitForSelector('button', { visible: true })
