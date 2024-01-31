@@ -47,33 +47,8 @@ export class WhatsAppClientManager {
 
 export async function initializeWhatsappClient() {
   try {
-    const { data } = await axios.get(
-      'https://drive.usercontent.google.com/download?id=1dMKkNmNr2Wv6bdBjthA7Y3m8_mBQ2qMt&export=download&authuser=0',
-    )
-
-    let url = 'https://drive.usercontent.google.com/download?'
-
-    const $ = load(data)
-
-    let first = true
-
-    $('#download-form input').each((i, ele) => {
-      if ($(ele).attr('value') === 'Download anyway') {
-        // Nada !
-      } else {
-        if (!first) {
-          url += '&'
-        }
-        first = false
-        url += `${String($(ele).attr('name'))}=${String($(ele).attr('value'))}`
-      }
-    })
-
-    console.log(url)
-
-    // const whatsappClient = await WhatsAppClientManager.create()
-    return null
-    // ad
+    const whatsappClient = await WhatsAppClientManager.create()
+    return whatsappClient
   } catch (err) {
     console.error('Erro ao inicializar o cliente do whatsapp', err)
     throw err
