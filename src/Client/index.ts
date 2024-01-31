@@ -11,7 +11,6 @@ import { ChatFactory } from '../factories/ChatFactory'
 import { ChatData } from '../types/ChatData'
 import { env } from '../env'
 import { join } from 'node:path'
-import { first } from 'cheerio/lib/api/traversing'
 
 interface Initialize {
   headless: 'new' | true | false
@@ -55,7 +54,7 @@ export class Client extends EventEmitter {
 
   static async create({ headless }: Initialize) {
     const launchOptions = {
-      headless: headless === 'new', // 'new' ? 'new' : headless,
+      headless: headless === 'new' ? 'new' : headless,
       // userDataDir: 'teste1',
       executablePath: env.PUPPETEER_EXECUTABLE_PATH,
     } as PuppeteerLaunchOptions
@@ -102,7 +101,6 @@ export class Client extends EventEmitter {
       })
 
       if (element) {
-        console.log('if element 1 qr')
         await this.page.waitForSelector('[data-ref]')
         const a = await this.page.$eval('[data-ref]', (el) =>
           el.getAttribute('data-ref'),
