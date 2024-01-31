@@ -187,16 +187,22 @@ export class Client extends EventEmitter {
         await this.page.waitForSelector('button', { visible: true })
         await reloadButton.click()
       }
-      await this.page.waitForSelector('[data-ref]')
-      const qrPage = await this.page.$eval('[data-ref]', (el) =>
-        el.getAttribute('data-ref'),
-      )
-      if (qrPage && qrPage !== this.qr) {
-        this.qr = qrPage
+      try {
+        await this.page.waitForSelector('[data-ref]')
+        const qrPage = await this.page.$eval('[data-ref]', (el) =>
+          el.getAttribute('data-ref'),
+        )
+        if (qrPage && qrPage !== this.qr) {
+          this.qr = qrPage
+        }
+        setTimeout(() => {
+          this.refreshQr()
+        }, 1000)
+      } catch (e) {
+        if (e instanceof TimeoutError) {
+          // Não precisa acontecer nada mesmo :)
+        }
       }
-      setTimeout(() => {
-        this.refreshQr()
-      }, 1000)
     }
   }
 
