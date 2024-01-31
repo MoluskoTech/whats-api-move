@@ -52,6 +52,11 @@ export class Client extends EventEmitter {
     this.browser = browser
   }
 
+  private pathScreen =
+    env.NODE_ENV === 'development'
+      ? join(__dirname, '..', '..', 'public', 'example.png')
+      : join(__dirname, '..', 'public', 'example.png')
+
   static async create({ headless }: Initialize) {
     const launchOptions = {
       headless: headless === 'new' ? 'new' : headless,
@@ -74,7 +79,7 @@ export class Client extends EventEmitter {
         this.initialize()
       }, 7000)
       this.page.screenshot({
-        path: join(__dirname, '..', 'public', 'example.png'),
+        path: join(this.pathScreen, 'error.png'),
       })
       this.firstError = false
     }
@@ -97,6 +102,9 @@ export class Client extends EventEmitter {
         if (this.firstError) {
           setTimeout(() => {
             console.log('rodando timeout')
+            this.page.screenshot({
+              path: join(this.pathScreen, 'error.png'),
+            })
             this.initialize()
           }, 7000)
           this.page.screenshot({
@@ -113,7 +121,7 @@ export class Client extends EventEmitter {
             this.initialize()
           }, 7000)
           this.page.screenshot({
-            path: join(__dirname, '..', 'public', 'example.png'),
+            path: join(this.pathScreen, 'error.png'),
           })
           this.firstError = false
         }

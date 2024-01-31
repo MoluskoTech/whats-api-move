@@ -106,6 +106,12 @@ export async function instanceRoutes(app: FastifyInstance) {
   )
 
   app.get('/screen', async (request: FastifyRequest, reply: FastifyReply) => {
-    return reply.sendFile('example.png')
+    const { filename } = request.query
+
+    if (!filename) {
+      return reply.code(400).send('Nome do arquivo não fornecido')
+    }
+
+    return reply.sendFile(`${filename}.png`)
   })
 }
