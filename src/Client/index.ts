@@ -60,7 +60,7 @@ export class Client extends EventEmitter {
   static async create({ headless }: Initialize) {
     const launchOptions = {
       headless: headless === 'new' ? 'new' : headless,
-      // userDataDir: 'teste1',
+      userDataDir: 'tete1',
       executablePath: env.PUPPETEER_EXECUTABLE_PATH,
     } as PuppeteerLaunchOptions
 
