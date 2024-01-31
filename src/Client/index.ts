@@ -80,13 +80,12 @@ export class Client extends EventEmitter {
         })
         console.log('PAGE ERROR:', err)
       })
-      this.page.on('pageerror', (pageerr) =>{
+      this.page.on('pageerror', (pageerr) => {
         this.page.screenshot({
           path: join(__dirname, '..', 'public', 'example.png'),
         })
-        console.log('PAGE ERROR:', pageerr),
-      }
-      )
+        console.log('PAGE ERROR:', pageerr)
+      })
 
       const element = await this.page.waitForSelector('div > .landing-title', {
         timeout: 8000,
