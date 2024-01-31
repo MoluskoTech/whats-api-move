@@ -84,6 +84,7 @@ export class Client extends EventEmitter {
       })
 
       if (element) {
+        console.log('if element 1 qr')
         await this.page.waitForSelector('[data-ref]')
         const a = await this.page.$eval('[data-ref]', (el) =>
           el.getAttribute('data-ref'),
