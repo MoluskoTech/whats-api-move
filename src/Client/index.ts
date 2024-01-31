@@ -67,6 +67,20 @@ export class Client extends EventEmitter {
 
   firstError = true
 
+  handlePageError(pageError: any) {
+    if (this.firstError) {
+      setTimeout(() => {
+        console.log('rodando timeout')
+        this.initialize()
+      }, 7000)
+      this.page.screenshot({
+        path: join(__dirname, '..', 'public', 'example.png'),
+      })
+      this.firstError = false
+    }
+    console.log('PAGE ERROR:', pageError)
+  }
+
   async initialize() {
     try {
       this.loading = false
@@ -79,33 +93,8 @@ export class Client extends EventEmitter {
       this.page.setBypassCSP(true)
       await this.page.goto('https://web.whatsapp.com/')
       this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
-      this.page.on('error', (err) => {
-        if (this.firstError) {
-          setTimeout(() => {
-            console.log('rodando timeout')
-            this.initialize()
-          }, 3000)
-          this.page.screenshot({
-            path: join(__dirname, '..', 'public', 'example.png'),
-          })
-          this.firstError = false
-        }
-
-        console.log('PAGE ERROR:', err)
-      })
-      this.page.on('pageerror', (pageerr) => {
-        if (this.firstError) {
-          setTimeout(() => {
-            console.log('rodando timeout')
-            this.initialize()
-          }, 3000)
-          this.page.screenshot({
-            path: join(__dirname, '..', 'public', 'example.png'),
-          })
-          this.firstError = false
-        }
-        console.log('PAGE ERROR:', pageerr)
-      })
+      this.page.on('error', this.handlePageError)
+      this.page.on('pageerror', this.handlePageError)
 
       const element = await this.page.waitForSelector('div > .landing-title', {
         timeout: 8000,
