@@ -1,6 +1,8 @@
 import fastify from 'fastify'
 import cors from '@fastify/cors'
 import { env } from './env'
+import { join } from 'node:path'
+import fastifyStatic from '@fastify/static'
 
 import { instanceRoutes } from './routes/instance.route'
 import { statusRoutes } from './routes/status.routes'
@@ -20,6 +22,11 @@ initializeWhatsappClient()
     })
 
     app.register(fastifyWebsocket)
+
+    app.register(fastifyStatic, {
+      root: join(__dirname, 'public'),
+      prefix: '/public/',
+    })
 
     app.register(instanceRoutes, {
       prefix: '/instance',

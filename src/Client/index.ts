@@ -10,6 +10,7 @@ import EventEmitter from 'node:events'
 import { ChatFactory } from '../factories/ChatFactory'
 import { ChatData } from '../types/ChatData'
 import { env } from '../env'
+import { join } from 'node:path'
 
 interface Initialize {
   headless: 'new' | true | false
@@ -55,7 +56,7 @@ export class Client extends EventEmitter {
     const launchOptions = {
       headless: headless === 'new' ? 'new' : headless,
       defaultViewport: null,
-      userDataDir: 'C:\\teste1',
+      userDataDir: 'teste1',
       executablePath: env.PUPPETEER_EXECUTABLE_PATH,
     } as PuppeteerLaunchOptions
 
@@ -157,7 +158,9 @@ export class Client extends EventEmitter {
   private async refreshQr() {
     if (!this.loading && this.needsQr) {
       try {
-        this.page.screenshot({ path: 'example.png' })
+        this.page.screenshot({
+          path: join(__dirname, '..', 'public', 'example.png'),
+        })
         console.log('Buscando mensagem de carregamento')
         const loadingMessage = await this.page.waitForXPath(
           '//div[contains(text(), "Carregando suas conversas")]',
