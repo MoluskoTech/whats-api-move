@@ -158,15 +158,16 @@ export class Client extends EventEmitter {
   private async refreshQr() {
     if (!this.loading && this.needsQr) {
       try {
-        this.page.screenshot({
-          path: join(__dirname, '..', 'public', 'example.png'),
-        })
         console.log('Buscando mensagem de carregamento')
         const loadingMessage = await this.page.waitForXPath(
           '//div[contains(text(), "Carregando suas conversas")]',
           { timeout: 500 },
         )
         if (loadingMessage && this.needsQr) {
+          console.log('mensagem de carregamento existe')
+          this.page.screenshot({
+            path: join(__dirname, '..', 'public', 'example.png'),
+          })
           this.status = 'Loading'
           this.needsQr = false
           this.qr = ''
@@ -181,7 +182,6 @@ export class Client extends EventEmitter {
     }
 
     if (this.needsQr) {
-      console.log('Buscando Qr')
       const reloadButton = await this.page.$('button')
       if (reloadButton) {
         await this.page.waitForSelector('button', { visible: true })
