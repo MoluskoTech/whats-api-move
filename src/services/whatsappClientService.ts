@@ -47,8 +47,9 @@ export class WhatsAppClientManager {
 
 export async function initializeWhatsappClient() {
   try {
-    const whatsappClient = await WhatsAppClientManager.create()
-    return whatsappClient
+    // const whatsappClient = await WhatsAppClientManager.create()
+    // return whatsappClient
+    return null
   } catch (err) {
     console.error('Erro ao inicializar o cliente do whatsapp', err)
     throw err
