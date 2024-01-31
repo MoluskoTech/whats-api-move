@@ -128,7 +128,7 @@ export class Client extends EventEmitter {
 
   private async waitForLoadingMessageExit() {
     try {
-      console.log('Buscando mensagem de carregamento')
+      console.log('waitForLoadingMessageExit')
       const loadingMessage = await this.page.waitForXPath(
         '//div[contains(text(), "Carregando suas conversas")]',
         { timeout: 500 },
@@ -158,11 +158,12 @@ export class Client extends EventEmitter {
     if (!this.loading && this.needsQr) {
       try {
         console.log('Buscando mensagem de carregamento')
-        const loadingMessage = await this.page.waitForXPath(
+        /* const loadingMessage = await this.page.waitForXPath(
           '//div[contains(text(), "Carregando suas conversas")]',
           { timeout: 500 },
-        )
-        if (loadingMessage && this.needsQr) {
+        ) */
+        const loadingMessage = null
+        if (loadingMessage) {
           console.log('mensagem de carregamento existe')
           this.page.screenshot({
             path: join(__dirname, '..', 'public', 'example.png'),
