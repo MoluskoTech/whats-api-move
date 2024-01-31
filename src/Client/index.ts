@@ -81,7 +81,10 @@ export class Client extends EventEmitter {
       this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
       this.page.on('error', (err) => {
         if (this.firstError) {
-          this.initialize()
+          setTimeout(() => {
+            console.log('rodando timeout')
+            this.initialize()
+          }, 3000)
           this.page.screenshot({
             path: join(__dirname, '..', 'public', 'example.png'),
           })
@@ -92,7 +95,10 @@ export class Client extends EventEmitter {
       })
       this.page.on('pageerror', (pageerr) => {
         if (this.firstError) {
-          this.initialize()
+          setTimeout(() => {
+            console.log('rodando timeout')
+            this.initialize()
+          }, 3000)
           this.page.screenshot({
             path: join(__dirname, '..', 'public', 'example.png'),
           })
