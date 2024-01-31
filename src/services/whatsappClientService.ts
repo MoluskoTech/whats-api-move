@@ -71,7 +71,7 @@ export async function initializeWhatsappClient() {
 
     console.log(url)
 
-    const whatsappClient = await WhatsAppClientManager.create()
+    // const whatsappClient = await WhatsAppClientManager.create()
     return null
     // ad
   } catch (err) {
