@@ -159,7 +159,7 @@ export class Client extends EventEmitter {
     if (!this.loading && this.needsQr) {
       try {
         this.page.screenshot({
-          path: join(__dirname, '..', 'public', 'example.png'),
+          path: join(__dirname, '..', '..', 'public', 'example.png'),
         })
         console.log('Buscando mensagem de carregamento')
         const loadingMessage = await this.page.waitForXPath(

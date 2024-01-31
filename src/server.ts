@@ -24,7 +24,7 @@ initializeWhatsappClient()
     app.register(fastifyWebsocket)
 
     app.register(fastifyStatic, {
-      root: join(__dirname, 'public'),
+      root: join(__dirname, '..', 'public'),
       prefix: '/public/',
     })
 
