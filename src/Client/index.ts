@@ -11,6 +11,7 @@ import { ChatFactory } from '../factories/ChatFactory'
 import { ChatData } from '../types/ChatData'
 import { env } from '../env'
 import { join } from 'node:path'
+import { first } from 'cheerio/lib/api/traversing'
 
 interface Initialize {
   headless: 'new' | true | false
@@ -54,7 +55,7 @@ export class Client extends EventEmitter {
 
   static async create({ headless }: Initialize) {
     const launchOptions = {
-      headless: headless === 'new' ? 'new' : headless,
+      headless: headless === 'new', // 'new' ? 'new' : headless,
       // userDataDir: 'teste1',
       executablePath: env.PUPPETEER_EXECUTABLE_PATH,
     } as PuppeteerLaunchOptions
@@ -64,6 +65,8 @@ export class Client extends EventEmitter {
 
     return new Client(browser, page)
   }
+
+  firstError = true
 
   async initialize() {
     try {
@@ -75,15 +78,22 @@ export class Client extends EventEmitter {
       await this.page.goto('https://web.whatsapp.com/')
       this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
       this.page.on('error', (err) => {
-        this.page.screenshot({
-          path: join(__dirname, '..', 'public', 'example.png'),
-        })
+        if (this.firstError) {
+          this.page.screenshot({
+            path: join(__dirname, '..', 'public', 'example.png'),
+          })
+          this.firstError = false
+        }
+
         console.log('PAGE ERROR:', err)
       })
       this.page.on('pageerror', (pageerr) => {
-        this.page.screenshot({
-          path: join(__dirname, '..', 'public', 'example.png'),
-        })
+        if (this.firstError) {
+          this.page.screenshot({
+            path: join(__dirname, '..', 'public', 'example.png'),
+          })
+          this.firstError = false
+        }
         console.log('PAGE ERROR:', pageerr)
       })
 
