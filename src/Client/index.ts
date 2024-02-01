@@ -77,8 +77,8 @@ export class Client extends EventEmitter {
           '--disable-dev-shm-usage',
           '--no-sandbox',
           '--disable-setuid-sandbox',
+          '--single-process',
         ],
-        protocolTimeout: 30000,
       } as PuppeteerLaunchOptions
 
       const browser = await puppeteer.launch(launchOptions)
