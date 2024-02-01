@@ -75,6 +75,8 @@ export class Client extends EventEmitter {
           '--disable-gpu',
           '--disable-extensions',
           '--disable-dev-shm-usage',
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
         ],
         protocolTimeout: 30000,
       } as PuppeteerLaunchOptions
