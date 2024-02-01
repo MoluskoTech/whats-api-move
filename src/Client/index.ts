@@ -89,9 +89,6 @@ export class Client extends EventEmitter {
         console.log('rodando timeout')
         this.initialize()
       }, 7000)
-      this.page.screenshot({
-        path: join(this.pathScreen, 'error.png'),
-      })
       this.firstError = false
     }
     console.log('PAGE ERROR:', pageError)
@@ -121,16 +118,10 @@ export class Client extends EventEmitter {
         if (this.firstError) {
           setTimeout(() => {
             console.log('rodando timeout')
-            this.page.screenshot({
-              path: join(this.pathScreen, 'error.png'),
-            })
             this.reset().then(() => {
               this.initialize()
             })
           }, 15000)
-          this.page.screenshot({
-            path: join(__dirname, '..', 'public', 'example.png'),
-          })
           this.firstError = false
         }
         console.log('PAGE ERROR:', err)
@@ -143,9 +134,6 @@ export class Client extends EventEmitter {
               this.initialize()
             })
           }, 15000)
-          this.page.screenshot({
-            path: join(this.pathScreen, 'error.png'),
-          })
           this.firstError = false
         }
         console.log('PAGE ERROR:', err)
@@ -170,9 +158,6 @@ export class Client extends EventEmitter {
     } catch (e) {
       if (e instanceof TimeoutError) {
         console.log('Não achou landing-page')
-        this.page.screenshot({
-          path: join(__dirname, '..', 'public', 'example.png'),
-        })
       }
     }
   }
@@ -230,19 +215,11 @@ export class Client extends EventEmitter {
   private async refreshQr() {
     if (!this.loading && this.needsQr) {
       try {
-        console.log('Buscando mensagem de carregamento')
-        await this.page.screenshot({
-          path: join(this.pathScreen, 'loading.png'),
-        })
         const loadingMessage = await this.page.waitForXPath(
           '//div[contains(text(), "Loading your chats")]',
           { timeout: 500 },
         )
         if (loadingMessage) {
-          console.log('mensagem de carregamento existe')
-          this.page.screenshot({
-            path: join(this.pathScreen, 'example.png'),
-          })
           this.status = 'Loading'
           this.needsQr = false
           this.qr = ''
