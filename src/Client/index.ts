@@ -109,15 +109,9 @@ export class Client extends EventEmitter {
       this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
       this.page.on('error', (err) => {
         console.log('PAGE ERROR:', err)
-        if (this.status === 'Loading_chats') {
-          this.loadChats()
-        }
       })
       this.page.on('pageerror', (err) => {
         console.log('PAGE ERROR:', err)
-        if (this.status === 'Loading_chats') {
-          this.loadChats()
-        }
       })
 
       const element = await this.page.waitForSelector('div > .landing-title', {
@@ -256,7 +250,10 @@ export class Client extends EventEmitter {
   loadChats() {
     this.status = 'ready'
     this.page.evaluate(() => {
-      window.WWebJS.getChats()
+      setTimeout(() => {
+        console.log('Rodando getChats')
+        window.WWebJS.getChats()
+      }, 60000)
     })
     // this.status = 'Loading_chats'
     // setTimeout(() => {
