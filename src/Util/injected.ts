@@ -714,6 +714,21 @@ export const LoadUtils = () => {
     return res
   }
 
+  window.WWebJS.getNewChatModel = (chat) => {
+    const res = chat.serialize()
+    res.isGroup = chat.isGroup
+    res.formattedTitle = chat.formattedTitle
+
+    const response = {
+      id: res.id,
+      title: res.formattedTitle,
+      isGroup: res.isGroup,
+      formattedTitle: chat.formattedTitle,
+    }
+
+    return response
+  }
+
   window.WWebJS.getChat = async (chatId) => {
     const chatWid = window.Store.WidFactory.createWid(chatId)
     const chat = await window.Store.Chat.find(chatWid)
@@ -723,18 +738,16 @@ export const LoadUtils = () => {
   window.WWebJS.getChats = async () => {
     const chats = window.Store.Chat.getModelsArray()
 
-    const chatsModel = chats.map(
-      async (chat) => await window.WWebJS.getChatModel(chat),
-    )
+    // const chatsModel = chats.map(
+    //   async (chat) => await window.WWebJS.getChatModel(chat),
+    // )
 
-    console.log('chatsModel: ', JSON.stringify(chatsModel))
-    console.log('chatsModel1: ', JSON.stringify(chatsModel[0]))
+    const chatsModel = chats.map((chat) => {
+      const chatModel = window.WWebJS.getNewChatModel(chat)
+      return chatModel
+    })
 
-    const chatPromises = chats.map(async (chat) =>
-      window.WWebJS.getChatModel(chat),
-    )
-
-    return await Promise.all(chatPromises)
+    return chatsModel
   }
 
   window.WWebJS.getContactModel = (contact) => {
