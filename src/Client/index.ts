@@ -116,7 +116,6 @@ export class Client extends EventEmitter {
       await this.page.setViewport({ width: 1920, height: 1080 })
       this.page.setBypassCSP(true)
       await this.page.goto('https://web.whatsapp.com/')
-      // await this.page.reload()
       this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
       this.page.on('error', (err) => {
         if (this.firstError) {
@@ -259,6 +258,7 @@ export class Client extends EventEmitter {
     }
 
     if (this.needsQr) {
+      console.log('needsqr')
       const reloadButton = await this.page.$('button')
       if (reloadButton) {
         await this.page.waitForSelector('button', { visible: true })
