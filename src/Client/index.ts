@@ -49,6 +49,10 @@ export class Client extends EventEmitter {
   private FILEPATH = 'localStorage.json'
   private page: Page
   private browser: Browser
+  private loadingMessage =
+    env.NODE_ENV === 'development'
+      ? 'Carregando suas conversas'
+      : 'Loading your chats'
 
   constructor(browser: Browser, page: Page) {
     super()
@@ -169,7 +173,7 @@ export class Client extends EventEmitter {
   private async waitForLoadingMessageExit() {
     try {
       const loadingMessage = await this.page.waitForXPath(
-        '//div[contains(text(), "Loading your chats")]',
+        `//div[contains(text(), "${this.loadingMessage}")]`,
         { timeout: 500 },
       )
       if (loadingMessage) {
@@ -194,7 +198,7 @@ export class Client extends EventEmitter {
     if (!this.loading && this.needsQr) {
       try {
         const loadingMessage = await this.page.waitForXPath(
-          '//div[contains(text(), "Loading your chats")]',
+          `//div[contains(text(), "${this.loadingMessage}")]`,
           { timeout: 500 },
         )
         if (loadingMessage) {
@@ -256,10 +260,10 @@ export class Client extends EventEmitter {
   loadChats() {
     this.status = 'ready'
     this.page.evaluate(() => {
-      setTimeout(() => {
-        console.log('Rodando getChats')
-        window.WWebJS.getChats()
-      }, 60000)
+      console.log('Rodando getChats')
+      window.WWebJS.getChats().then(() => {
+        console.log('Finalizado')
+      })
     })
     // this.status = 'Loading_chats'
     // setTimeout(() => {

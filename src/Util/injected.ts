@@ -721,7 +721,9 @@ export const LoadUtils = () => {
   }
 
   window.WWebJS.getChats = async () => {
+    console.log('rodando getChats')
     const chats = window.Store.Chat.getModelsArray()
+    console.log({ chats })
 
     const chatPromises = chats.map((chat) => window.WWebJS.getChatModel(chat))
     return await Promise.all(chatPromises)
@@ -1248,7 +1250,9 @@ export const LoadUtils = () => {
     }
 
     const membReqResCodes = {
-      default: `An unknown error occupied while ${toApprove ? 'approving' : 'rejecting'} the participant membership request`,
+      default: `An unknown error occupied while ${
+        toApprove ? 'approving' : 'rejecting'
+      } the participant membership request`,
       400: 'ParticipantNotFoundError',
       401: 'ParticipantNotAuthorizedError',
       403: 'ParticipantForbiddenError',
@@ -1292,7 +1296,9 @@ export const LoadUtils = () => {
                         membReqResCodes[error] || membReqResCodes.default,
                     }
                   : {
-                      message: `${toApprove ? 'Approved' : 'Rejected'} successfully`,
+                      message: `${
+                        toApprove ? 'Approved' : 'Rejected'
+                      } successfully`,
                     }),
               }
             })

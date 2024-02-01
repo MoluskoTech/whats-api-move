@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import axios from 'axios'
 import https from 'node:https'
 import { load } from 'cheerio'
+import { env } from '../env'
 
 export class WhatsAppClientManager {
   client: Client
@@ -40,7 +41,10 @@ export class WhatsAppClientManager {
   }
 
   static async create() {
-    const client = await Client.create({ headless: 'new' })
+    console.log('env: ', env.NODE_ENV)
+    const client = await Client.create({
+      headless: env.NODE_ENV === 'development' ? false : 'new',
+    })
     if (client) {
       return new WhatsAppClientManager(client)
     }
