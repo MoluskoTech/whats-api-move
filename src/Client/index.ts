@@ -254,15 +254,19 @@ export class Client extends EventEmitter {
   }
 
   loadChats() {
-    this.status = 'Loading_chats'
-    setTimeout(() => {
-      this.page.evaluate(() => {
-        console.log('entrou no loadChats')
-        window.WWebJS.getChats().then(() => {
-          this.status = 'ready'
-        })
-        console.log('Fim do loadChats')
-      })
-    }, 10000)
+    this.status = 'ready'
+    this.page.evaluate(() => {
+      window.WWebJS.getChats()
+    })
+    // this.status = 'Loading_chats'
+    // setTimeout(() => {
+    //   this.page.evaluate(() => {
+    //     console.log('entrou no loadChats')
+    //     window.WWebJS.getChats().then(() => {
+    //       this.status = 'ready'
+    //     })
+    //     console.log('Fim do loadChats')
+    //   })
+    // }, 10000)
   }
 }
