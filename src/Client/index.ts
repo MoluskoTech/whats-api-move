@@ -62,18 +62,22 @@ export class Client extends EventEmitter {
       : join(__dirname, '..', 'public')
 
   static async create({ headless }: Initialize) {
-    const launchOptions = {
-      headless: headless === 'new' ? 'new' : headless,
-      // userDataDir: 'tete1',
-      executablePath: env.PUPPETEER_EXECUTABLE_PATH,
-      args: ['--disable-gpu', '--disable-extensions'],
-      product: 'firefox',
-    } as PuppeteerLaunchOptions
+    try {
+      const launchOptions = {
+        headless: headless === 'new' ? 'new' : headless,
+        // userDataDir: 'tete1',
+        executablePath: env.PUPPETEER_EXECUTABLE_PATH,
+        args: ['--disable-gpu', '--disable-extensions'],
+        product: 'firefox',
+      } as PuppeteerLaunchOptions
 
-    const browser = await puppeteer.launch(launchOptions)
-    const page = await browser.newPage()
+      const browser = await puppeteer.launch(launchOptions)
+      const page = await browser.newPage()
 
-    return new Client(browser, page)
+      return new Client(browser, page)
+    } catch (e) {
+      console.log('Erro ao criar o cliente: ', e)
+    }
   }
 
   async reset() {
@@ -138,6 +142,7 @@ export class Client extends EventEmitter {
       if (e instanceof TimeoutError) {
         console.log('Não achou landing-page')
       }
+      console.log('Erro ao inicializar o cliente: ', e)
     }
   }
 
