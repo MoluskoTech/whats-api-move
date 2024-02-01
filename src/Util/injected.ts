@@ -723,15 +723,16 @@ export const LoadUtils = () => {
   window.WWebJS.getChats = async () => {
     const chats = window.Store.Chat.getModelsArray()
 
-    console.log('chats: ', JSON.stringify(chats))
+    const chatsModel = chats.map(
+      async (chat) => await window.WWebJS.getChatModel(chat),
+    )
+
+    console.log('chatsModel: ', JSON.stringify(chatsModel))
+    console.log('chatsModel1: ', JSON.stringify(chatsModel[0]))
 
     const chatPromises = chats.map(async (chat) =>
       window.WWebJS.getChatModel(chat),
     )
-
-    const chats2 = await chatPromises
-
-    console.log('chats2: ', chats2)
 
     return await Promise.all(chatPromises)
   }
