@@ -723,6 +723,8 @@ export const LoadUtils = () => {
   window.WWebJS.getChats = async () => {
     const chats = window.Store.Chat.getModelsArray()
 
+    console.log('chats: ', JSON.stringify(chats))
+
     const chatPromises = chats.map(async (chat) =>
       window.WWebJS.getChatModel(chat),
     )
