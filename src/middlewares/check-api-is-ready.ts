@@ -6,20 +6,20 @@ export async function checkApiIsReady(
 ) {
   const whatsappClientManager = request.server.whatsappClient
 
-  if (!whatsappClientManager.apiReady) {
-    reply.send({
-      type: 'error',
-      message: 'Api em inicialização , favor aguardar',
-      errorNumber: 102,
-    })
-    return
-  }
   if (whatsappClientManager.qr) {
     reply.send({
       type: 'error',
       message: 'Necessário validar o qrCode',
       errorNumber: 101,
       qr: whatsappClientManager.qr,
+    })
+    return
+  }
+  if (whatsappClientManager.client.status !== 'ready') {
+    reply.send({
+      type: 'error',
+      message: 'Api em inicialização , favor aguardar',
+      errorNumber: 102,
     })
   }
 }
