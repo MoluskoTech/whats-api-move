@@ -71,7 +71,11 @@ export class Client extends EventEmitter {
         headless: headless === 'new' ? 'new' : headless,
         // userDataDir: 'tete1',
         executablePath: env.PUPPETEER_EXECUTABLE_PATH,
-        args: ['--disable-gpu', '--disable-extensions'],
+        args: [
+          '--disable-gpu',
+          '--disable-extensions',
+          '--disable-dev-shm-usage',
+        ],
       } as PuppeteerLaunchOptions
 
       const browser = await puppeteer.launch(launchOptions)
@@ -110,6 +114,14 @@ export class Client extends EventEmitter {
       await this.page.setUserAgent(
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/11.1 Safari/605.1.15',
       )
+      await this.page.setRequestInterception(true)
+      this.page.on('request', (request) => {
+        if (['image', 'stylesheet'].includes(request.resourceType())) {
+          request.abort()
+        } else {
+          request.continue()
+        }
+      })
       await this.page.setViewport({ width: 1920, height: 1080 })
       this.page.setBypassCSP(true)
       await this.page.goto('https://web.whatsapp.com/')
