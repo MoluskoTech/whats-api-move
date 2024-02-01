@@ -95,12 +95,12 @@ export class Client extends EventEmitter {
 
   async initialize() {
     try {
-      const pageClient = await this.page.target().createCDPSession()
-      await pageClient.send('Storage.clearDataForOrigin', {
-        origin: '*',
-        storageTypes:
-          'appcache,cookies,indexeddb,local_storage,shader_cache,websql,service_workers,cache_storage',
-      })
+      // const pageClient = await this.page.target().createCDPSession()
+      // await pageClient.send('Storage.clearDataForOrigin', {
+      //   origin: '*',
+      //   storageTypes:
+      //     'appcache,cookies,indexeddb,local_storage,shader_cache,websql,service_workers,cache_storage',
+      // })
       this.loading = false
       this.needsQr = true
       this.status = 'Authenticate'
