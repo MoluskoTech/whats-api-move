@@ -66,6 +66,7 @@ export class Client extends EventEmitter {
       headless: headless === 'new' ? 'new' : headless,
       // userDataDir: 'tete1',
       executablePath: env.PUPPETEER_EXECUTABLE_PATH,
+      args: ['--disable-gpu', '--disable-extensions'],
     } as PuppeteerLaunchOptions
 
     const browser = await puppeteer.launch(launchOptions)
