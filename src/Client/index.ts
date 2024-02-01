@@ -120,6 +120,8 @@ export class Client extends EventEmitter {
         timeout: 8000,
       })
 
+      this.page.screenshot({ path: join(this.pathScreen, 'landing-page.png') })
+
       if (element) {
         await this.page.waitForSelector('[data-ref]')
         const a = await this.page.$eval('[data-ref]', (el) =>
