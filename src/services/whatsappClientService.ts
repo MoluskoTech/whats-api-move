@@ -41,7 +41,9 @@ export class WhatsAppClientManager {
 
   static async create() {
     const client = await Client.create({ headless: 'new' })
-    return new WhatsAppClientManager(client)
+    if (client) {
+      return new WhatsAppClientManager(client)
+    }
   }
 }
 

@@ -96,8 +96,6 @@ export class Client extends EventEmitter {
   async initialize() {
     try {
       const pageClient = await this.page.target().createCDPSession()
-      await pageClient.send('Network.clearBrowserCache')
-      await pageClient.send('Network.clearBrowserCookies')
       await pageClient.send('Storage.clearDataForOrigin', {
         origin: '*',
         storageTypes:
