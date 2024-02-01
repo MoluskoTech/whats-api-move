@@ -27,8 +27,12 @@ export class Client extends EventEmitter {
     this.emit('qr', value)
   }
 
-  private _status: 'Authenticate' | 'ready' | 'disconnected' | 'Loading' =
-    'Authenticate'
+  private _status:
+    | 'Authenticate'
+    | 'ready'
+    | 'disconnected'
+    | 'Loading'
+    | 'Loading_chats' = 'Authenticate'
 
   public get status() {
     return this._status
@@ -83,17 +87,6 @@ export class Client extends EventEmitter {
 
   firstError = true
 
-  handlePageError(pageError: any) {
-    if (this.firstError) {
-      setTimeout(() => {
-        console.log('rodando timeout')
-        this.initialize()
-      }, 7000)
-      this.firstError = false
-    }
-    console.log('PAGE ERROR:', pageError)
-  }
-
   async initialize() {
     try {
       const pageClient = await this.page.target().createCDPSession()
@@ -115,28 +108,16 @@ export class Client extends EventEmitter {
       await this.page.goto('https://web.whatsapp.com/')
       this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
       this.page.on('error', (err) => {
-        if (this.firstError) {
-          setTimeout(() => {
-            console.log('rodando timeout')
-            this.reset().then(() => {
-              this.initialize()
-            })
-          }, 15000)
-          this.firstError = false
-        }
         console.log('PAGE ERROR:', err)
+        if (this.status === 'Loading_chats') {
+          this.loadChats()
+        }
       })
       this.page.on('pageerror', (err) => {
-        if (this.firstError) {
-          setTimeout(() => {
-            console.log('rodando timeout')
-            this.reset().then(() => {
-              this.initialize()
-            })
-          }, 15000)
-          this.firstError = false
-        }
         console.log('PAGE ERROR:', err)
+        if (this.status === 'Loading_chats') {
+          this.loadChats()
+        }
       })
 
       const element = await this.page.waitForSelector('div > .landing-title', {
@@ -187,20 +168,17 @@ export class Client extends EventEmitter {
 
   private async waitForLoadingMessageExit() {
     try {
-      console.log('waitForLoadingMessageExit')
       const loadingMessage = await this.page.waitForXPath(
         '//div[contains(text(), "Loading your chats")]',
         { timeout: 500 },
       )
       if (loadingMessage) {
-        console.log('achou, loop')
         setTimeout(() => {
           this.waitForLoadingMessageExit()
         }, 1000)
       }
     } catch (e) {
       if (e instanceof TimeoutError) {
-        console.log('Não encontrou mensagem de carregamento')
         await this.saveLocalStorage()
         this.page.setBypassCSP(true)
 
@@ -234,12 +212,6 @@ export class Client extends EventEmitter {
     }
 
     if (this.needsQr) {
-      console.log('needsqr')
-      // const reloadButton = await this.page.$('button')
-      // if (reloadButton) {
-      //   await this.page.waitForSelector('button', { visible: true })
-      //   await reloadButton.click()
-      // }
       try {
         await this.page.waitForSelector('[data-ref]')
         const qrPage = await this.page.$eval('[data-ref]', (el) =>
@@ -282,6 +254,7 @@ export class Client extends EventEmitter {
   }
 
   loadChats() {
+    this.status = 'Loading_chats'
     setTimeout(() => {
       this.page.evaluate(() => {
         console.log('entrou no loadChats')
