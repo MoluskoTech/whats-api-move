@@ -204,7 +204,7 @@ export class Client extends EventEmitter {
     try {
       console.log('waitForLoadingMessageExit')
       const loadingMessage = await this.page.waitForXPath(
-        '//div[contains(text(), "Carregando suas conversas")]',
+        '//div[contains(text(), "Loading your chats")]',
         { timeout: 500 },
       )
       if (loadingMessage) {
@@ -223,7 +223,6 @@ export class Client extends EventEmitter {
           url: 'https://unpkg.com/moduleraid/dist/moduleraid.iife.js',
         })
         await this.injections()
-        this.status = 'ready'
       }
     }
   }
@@ -309,7 +308,7 @@ export class Client extends EventEmitter {
     this.page.evaluate(() => {
       console.log('entrou no loadChats')
       window.WWebJS.getChats().then(() => {
-        console.log('Then do getChats')
+        this.status = 'ready'
       })
       console.log('Fim do loadChats')
     })
