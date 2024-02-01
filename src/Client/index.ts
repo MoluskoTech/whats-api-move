@@ -67,6 +67,7 @@ export class Client extends EventEmitter {
       // userDataDir: 'tete1',
       executablePath: env.PUPPETEER_EXECUTABLE_PATH,
       args: ['--disable-gpu', '--disable-extensions'],
+      product: 'firefox',
     } as PuppeteerLaunchOptions
 
     const browser = await puppeteer.launch(launchOptions)
