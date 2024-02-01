@@ -260,7 +260,6 @@ export class Client extends EventEmitter {
   loadChats() {
     this.status = 'ready'
     this.page.evaluate(() => {
-      console.log('Rodando getChats')
       window.WWebJS.getChats().then(() => {
         console.log('Finalizado')
       })

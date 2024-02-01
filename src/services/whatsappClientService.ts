@@ -41,7 +41,6 @@ export class WhatsAppClientManager {
   }
 
   static async create() {
-    console.log('env: ', env.NODE_ENV)
     const client = await Client.create({
       headless: env.NODE_ENV === 'development' ? false : 'new',
     })
