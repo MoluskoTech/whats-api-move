@@ -259,11 +259,11 @@ export class Client extends EventEmitter {
 
     if (this.needsQr) {
       console.log('needsqr')
-      const reloadButton = await this.page.$('button')
-      if (reloadButton) {
-        await this.page.waitForSelector('button', { visible: true })
-        await reloadButton.click()
-      }
+      // const reloadButton = await this.page.$('button')
+      // if (reloadButton) {
+      //   await this.page.waitForSelector('button', { visible: true })
+      //   await reloadButton.click()
+      // }
       try {
         await this.page.waitForSelector('[data-ref]')
         const qrPage = await this.page.$eval('[data-ref]', (el) =>
