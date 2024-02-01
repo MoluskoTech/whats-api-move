@@ -233,6 +233,9 @@ export class Client extends EventEmitter {
     if (!this.loading && this.needsQr) {
       try {
         console.log('Buscando mensagem de carregamento')
+        await this.page.screenshot({
+          path: join(this.pathScreen, 'loading.png'),
+        })
         const loadingMessage = await this.page.waitForXPath(
           '//div[contains(text(), "Carregando suas conversas")]',
           { timeout: 500 },
