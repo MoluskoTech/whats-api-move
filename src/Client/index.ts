@@ -237,13 +237,13 @@ export class Client extends EventEmitter {
           path: join(this.pathScreen, 'loading.png'),
         })
         const loadingMessage = await this.page.waitForXPath(
-          '//div[contains(text(), "Carregando suas conversas")]',
+          '//div[contains(text(), "Loading your chats")]',
           { timeout: 500 },
         )
         if (loadingMessage) {
           console.log('mensagem de carregamento existe')
           this.page.screenshot({
-            path: join(__dirname, '..', 'public', 'example.png'),
+            path: join(this.pathScreen, 'example.png'),
           })
           this.status = 'Loading'
           this.needsQr = false
