@@ -76,6 +76,7 @@ export class Client extends EventEmitter {
           '--disable-extensions',
           '--disable-dev-shm-usage',
         ],
+        protocolTimeout: 30000,
       } as PuppeteerLaunchOptions
 
       const browser = await puppeteer.launch(launchOptions)
