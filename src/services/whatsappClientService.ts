@@ -1,9 +1,4 @@
-import { LocalAuth } from 'whatsapp-web.js'
 import { Client } from '../Client'
-import fs from 'node:fs'
-import axios from 'axios'
-import https from 'node:https'
-import { load } from 'cheerio'
 import { env } from '../env'
 
 export class WhatsAppClientManager {

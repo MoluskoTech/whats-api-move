@@ -1,8 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
-import fs from 'node:fs'
 import { checkApiIsReady } from '../middlewares/check-api-is-ready'
-import { join, basename } from 'node:path'
 
 export async function instanceRoutes(app: FastifyInstance) {
   app.post(

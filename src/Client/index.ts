@@ -125,7 +125,14 @@ export class Client extends EventEmitter {
       await this.page.setViewport({ width: 1920, height: 1080 })
       this.page.setBypassCSP(true)
       await this.page.goto('https://web.whatsapp.com/')
-      this.page.on('console', (msg) => console.log('PAGE LOG:', msg.text()))
+      this.page.on('console', (msg) => {
+        if (
+          msg.text().indexOf('Failed to load resource: net::ERR_FAILED') === -1
+        ) {
+          console.log('PAGE LOG:', msg.text())
+        }
+      })
+
       this.page.on('error', (err) => {
         console.log('PAGE ERROR:', err)
       })
@@ -136,8 +143,6 @@ export class Client extends EventEmitter {
       const element = await this.page.waitForSelector('div > .landing-title', {
         timeout: 8000,
       })
-
-      this.page.screenshot({ path: join(this.pathScreen, 'landing-page.png') })
 
       if (element) {
         await this.page.waitForSelector('[data-ref]')
