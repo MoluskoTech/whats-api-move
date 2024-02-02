@@ -275,10 +275,17 @@ export class Client extends EventEmitter {
   }
 
   async getGroups() {
+    console.log('Iniciando getGroups on Client')
     const chats = (await this.page.evaluate(async () => {
-      return await window.WWebJS.getChats()
+      console.log('Iniciando getChats on page.evaluate')
+      const msgsChat = await window.WWebJS.getChats()
+      console.log('msgChat recebida')
+      return msgsChat
     })) as ChatData[]
-    return chats.filter((chat) => chat.isGroup)
+    console.log('Terminou o pageEvaluate')
+    const groups = chats.filter((chat) => chat.isGroup)
+    console.log('Filtrou groups: ', groups.length)
+    return groups
   }
 
   loadChats() {

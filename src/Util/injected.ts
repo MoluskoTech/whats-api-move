@@ -736,7 +736,10 @@ export const LoadUtils = () => {
   }
 
   window.WWebJS.getChats = async () => {
+    console.log('Iniciando getChats no Utils')
     const chats = window.Store.Chat.getModelsArray()
+
+    console.log('Pegou chats no ModelsArray')
 
     // const chatsModel = chats.map(
     //   async (chat) => await window.WWebJS.getChatModel(chat),
@@ -746,6 +749,7 @@ export const LoadUtils = () => {
       const chatModel = window.WWebJS.getNewChatModel(chat)
       return chatModel
     })
+    console.log('Rodou model de Chats')
 
     return chatsModel
   }
