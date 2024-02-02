@@ -47,13 +47,22 @@ export async function instanceRoutes(app: FastifyInstance) {
           nomeGrupo: z.string(),
         })
 
+        console.log('rota')
+
         const { message, nomeGrupo } = schema.parse(request.body)
+
+        console.log({ message, nomeGrupo })
 
         const groups = await app.whatsappClient.client.getGroups()
 
+        console.log('groups', groups.length)
+
         const group = groups.find((grp) => grp.formattedTitle === nomeGrupo)
 
+        console.log({ group })
+
         if (group) {
+          console.log('achou o grup')
           await app.whatsappClient.client.sendMessage(
             group.id._serialized,
             message,
