@@ -57,7 +57,7 @@ export async function instanceRoutes(app: FastifyInstance) {
 
         console.log('groups', groups.length)
 
-        const group = groups.find((grp) => grp.formattedTitle === nomeGrupo)
+        const group = groups.find((grp) => grp.name === nomeGrupo)
 
         console.log({ group })
 
