@@ -741,14 +741,14 @@ export const LoadUtils = () => {
 
     console.log('Pegou chats no ModelsArray')
 
-    // const chatsModel = chats.map(
-    //   async (chat) => await window.WWebJS.getChatModel(chat),
-    // )
+    const chatsModel = chats.map(
+      async (chat) => await window.WWebJS.getChatModel(chat),
+    )
 
-    const chatsModel = chats.map((chat) => {
-      const chatModel = window.WWebJS.getNewChatModel(chat)
-      return chatModel
-    })
+    // const chatsModel = chats.map((chat) => {
+    //   const chatModel = window.WWebJS.getNewChatModel(chat)
+    //   return chatModel
+    // })
     console.log('Rodou model de Chats')
 
     return chatsModel

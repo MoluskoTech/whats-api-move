@@ -281,9 +281,11 @@ export class Client extends EventEmitter {
       const msgsChat = await window.WWebJS.getChats()
       console.log('msgChat recebida')
       return msgsChat
-    })) as ChatData[]
+    })) as any[]
     console.log('Terminou o pageEvaluate')
     const groups = chats.filter((chat) => chat.isGroup)
+
+    return groups.map((group) => ChatFactory.create(this, group))
     console.log('Filtrou groups: ', groups.length)
     return groups
   }
