@@ -721,10 +721,20 @@ export const LoadUtils = () => {
 
     const response = {
       id: res.id,
+      name: res.formattedTitle,
       title: res.formattedTitle,
       isGroup: res.isGroup,
       formattedTitle: chat.formattedTitle,
-    }
+    } as any
+
+    // if (chat.groupMetadata) {
+    //   const chatWid = await window.Store.WidFactory.createWid(
+    //     chat.id._serialized,
+    //   )
+
+    //   await window.Store.GroupMetadata.update(chatWid)
+    //   response.groupMetadata = chat.groupMetadata.serialize()
+    // }
 
     return response
   }
@@ -741,15 +751,17 @@ export const LoadUtils = () => {
 
     console.log('Pegou chats no ModelsArray')
 
-    const chatsModel = chats.map(
-      async (chat) => await window.WWebJS.getChatModel(chat),
-    )
+    // const chatsModel = chats.map(
+    //   async (chat) => await window.WWebJS.getChatModel(chat),
+    // )
 
-    // const chatsModel = chats.map((chat) => {
-    //   const chatModel = window.WWebJS.getNewChatModel(chat)
-    //   return chatModel
-    // })
-    console.log('Rodou model de Chats')
+    const chatsModel = chats.map((chat) => {
+      const chatModel = window.WWebJS.getNewChatModel(chat)
+      return chatModel
+    })
+    console.log('Rodou model de Chats: ', JSON.stringify(chatsModel[0]))
+
+    console.log(JSON.stringify(chatsModel))
 
     return chatsModel
   }

@@ -63,10 +63,12 @@ export async function instanceRoutes(app: FastifyInstance) {
 
         if (group) {
           console.log('achou o grup')
-          await app.whatsappClient.client.sendMessage(
-            group.id._serialized,
-            message,
-          )
+          // await app.whatsappClient.client.sendMessage(
+          //   group.id._serialized,
+          //   message,
+          // )
+
+          await group.sendMessage(message)
           reply.code(200).send()
           return
         }
