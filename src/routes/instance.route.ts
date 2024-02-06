@@ -51,15 +51,15 @@ export async function instanceRoutes(app: FastifyInstance) {
 
         const { message, nomeGrupo } = schema.parse(request.body)
 
-        const groups = await app.whatsappClient.client.getGroups()
-
-        if (groups.length < 1) {
+        if (nomeGrupo.length < 1) {
           reply.send({
             type: 'error',
             message: 'Nenhum grupo encontrado , verifique os nomes',
             errorNumber: '302',
           })
         }
+
+        const groups = await app.whatsappClient.client.getGroups()
 
         for (const name of nomeGrupo) {
           const group = groups.find((grp) => grp.name === name)
