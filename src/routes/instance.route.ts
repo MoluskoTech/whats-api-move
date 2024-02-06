@@ -44,40 +44,29 @@ export async function instanceRoutes(app: FastifyInstance) {
       try {
         const schema = z.object({
           message: z.string(),
-          nomeGrupo: z.string(),
+          nomeGrupo: z.string().array(),
         })
-
-        console.log('rota')
 
         const { message, nomeGrupo } = schema.parse(request.body)
 
-        console.log({ message, nomeGrupo })
-
         const groups = await app.whatsappClient.client.getGroups()
 
-        console.log('groups', groups.length)
-
-        const group = groups.find((grp) => grp.name === nomeGrupo)
-
-        console.log({ group })
-
-        if (group) {
-          console.log('achou o grup')
-          // await app.whatsappClient.client.sendMessage(
-          //   group.id._serialized,
-          //   message,
-          // )
-
-          await group.sendMessage(message)
-          reply.code(200).send()
-          return
+        if (groups.length < 1) {
+          reply.send({
+            type: 'error',
+            message: 'Nenhum grupo encontrado , verifique os nomes',
+            errorNumber: '302',
+          })
         }
 
-        reply.send({
-          type: 'error',
-          message: 'Grupo não encontrado, verifique o nome',
-          errorNumber: '302',
-        })
+        for (const name of nomeGrupo) {
+          const group = groups.find((grp) => grp.name === name)
+          if (group) {
+            await group.sendMessage(message)
+          }
+        }
+
+        reply.code(200).send()
       } catch (error: any) {
         console.log(error)
         reply.send({
