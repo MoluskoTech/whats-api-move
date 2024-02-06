@@ -11,8 +11,6 @@ import { initializeWhatsappClient } from './services/whatsappClientService'
 
 export const app = fastify()
 
-console.log('oiew')
-
 initializeWhatsappClient()
   .then((whatsappClient) => {
     app.decorate('whatsappClient', whatsappClient)

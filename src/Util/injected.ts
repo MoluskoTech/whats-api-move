@@ -196,27 +196,16 @@ export const ExposeStore = () => {
    * @param {Function} callback Modified function
    */
   window.injectToFunction = (target, callback) => {
-    console.log('tamo aqui dentro do inject em: ', target)
-    console.log('Antes do findModule')
     const momo = window.mR.findModule(target.module)
-    console.log('Antes do modules')
-    console.log({ modules: window.mR.modules })
     const mumu = windows.mR.modules[target.module]
-    console.log({ momo, mumu })
     const module =
       typeof target.module === 'string'
         ? window.mR.findModule(target.module)
         : window.mR.modules[target.module]
-    console.log('Depois da chamada module')
     const originalFunction = module[target.index][target.function]
-    console.log('Depois da originalFunction')
     const modifiedFunction = (...args) => callback(originalFunction, ...args)
-    console.log('Depois de modifiedFunction')
     module[target.index][target.function] = modifiedFunction
-    console.log('Final de tudo ???')
   }
-
-  console.log('antes do oie')
 
   // window.injectToFunction(
   //   {
@@ -229,7 +218,6 @@ export const ExposeStore = () => {
   //     return proto.locationMessage ? null : func(...args)
   //   },
   // )
-  console.log('oie')
 
   // window.injectToFunction(
   //   {
@@ -746,10 +734,7 @@ export const LoadUtils = () => {
   }
 
   window.WWebJS.getChats = async () => {
-    console.log('Iniciando getChats no Utils')
     const chats = window.Store.Chat.getModelsArray()
-
-    console.log('Pegou chats no ModelsArray')
 
     // const chatsModel = chats.map(
     //   async (chat) => await window.WWebJS.getChatModel(chat),
@@ -759,10 +744,6 @@ export const LoadUtils = () => {
       const chatModel = window.WWebJS.getNewChatModel(chat)
       return chatModel
     })
-    console.log('Rodou model de Chats: ', JSON.stringify(chatsModel[0]))
-
-    console.log(JSON.stringify(chatsModel))
-
     return chatsModel
   }
 
