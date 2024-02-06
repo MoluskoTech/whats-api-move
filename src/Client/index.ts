@@ -287,4 +287,8 @@ export class Client extends EventEmitter {
   loadChats() {
     this.status = 'ready'
   }
+
+  async disconnect() {
+    await this.initialize()
+  }
 }

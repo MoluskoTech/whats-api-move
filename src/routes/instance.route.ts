@@ -66,8 +66,7 @@ export async function instanceRoutes(app: FastifyInstance) {
           const group = groups.find((grp) => grp.name === name)
           console.log('group: ', group)
           if (group) {
-            const sendedMessage = await group.sendMessage(message)
-            console.log({ sendedMessage })
+            await group.sendMessage(message)
           }
         }
 
@@ -118,4 +117,16 @@ export async function instanceRoutes(app: FastifyInstance) {
 
     return reply.sendFile(`${filename}.png`)
   })
+
+  app.get(
+    '/disconnect',
+    {
+      preHandler: [checkApiIsReady],
+    },
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      await app.whatsappClient.client.disconnect()
+
+      reply.code(200).send()
+    },
+  )
 }
