@@ -47,6 +47,8 @@ export async function instanceRoutes(app: FastifyInstance) {
           nomeGrupo: z.string().array(),
         })
 
+        console.log(request.body)
+
         const { message, nomeGrupo } = schema.parse(request.body)
 
         const groups = await app.whatsappClient.client.getGroups()
