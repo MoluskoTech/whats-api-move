@@ -14,6 +14,9 @@ export async function checkApiIsReady(
 ) {
   const domain = request.params.domain || request.body.dominio
 
+  console.log('middleware')
+  console.log({ domain })
+
   if (!domain) {
     reply.status(400).send({
       type: 'error',
@@ -24,6 +27,8 @@ export async function checkApiIsReady(
   }
 
   const whatsappClientManager = request.server.whatsappClients[domain]
+
+  console.log({ whatsappClientManager })
 
   if (!whatsappClientManager) {
     reply.status(400).send({
@@ -42,6 +47,7 @@ export async function checkApiIsReady(
     })
     return
   }
+  console.log(whatsappClientManager.qr)
   if (whatsappClientManager.client.status !== 'ready') {
     reply.status(400).send({
       type: 'error',
@@ -49,4 +55,6 @@ export async function checkApiIsReady(
       errorNumber: 102,
     })
   }
+  console.log(whatsappClientManager.client.status)
+  console.log('Saindo do middleware')
 }

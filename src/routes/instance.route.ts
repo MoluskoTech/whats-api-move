@@ -111,6 +111,8 @@ export async function instanceRoutes(app: FastifyInstance) {
       return
     }
 
+    connection.socket.send('loading')
+
     const client = await getWhatsappClient(app, domain)
 
     if (client) {
@@ -123,6 +125,7 @@ export async function instanceRoutes(app: FastifyInstance) {
       })
       client.client.on('ready', () => {
         connection.socket.send('ready')
+        connection.end()
       })
     }
   })
