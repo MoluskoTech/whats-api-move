@@ -10,7 +10,9 @@ declare global {
 
 declare module 'fastify' {
   interface FastifyInstance {
-    whatsappClient: WhatsAppClientManager
+    whatsappClients: {
+      [domain: string]: WhatsAppClientManager
+    }
   }
 }
 

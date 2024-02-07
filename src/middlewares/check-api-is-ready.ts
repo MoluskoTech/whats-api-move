@@ -1,7 +1,15 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
+interface RequestParams {
+  domain?: string
+}
+
+interface RequestBody {
+  dominio?: string
+}
+
 export async function checkApiIsReady(
-  request: FastifyRequest,
+  request: FastifyRequest<{ Params: RequestParams; Body: RequestBody }>,
   reply: FastifyReply,
 ) {
   const domain = request.params.domain || request.body.dominio
@@ -12,9 +20,10 @@ export async function checkApiIsReady(
       message: 'Dominio não fornecido',
       errorNumber: 100,
     })
+    return
   }
 
-  const whatsappClientManager = request.server.whatsappClient[domain]
+  const whatsappClientManager = request.server.whatsappClients[domain]
 
   if (!whatsappClientManager) {
     reply.status(400).send({

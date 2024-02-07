@@ -1,11 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { checkApiIsReady } from '../middlewares/check-api-is-ready'
-import { Client } from '../Client'
-import {
-  WhatsAppClientManager,
-  getWhatsappClient,
-} from '../services/whatsappClientService'
+import { getWhatsappClient } from '../services/whatsappClientService'
 
 export async function instanceRoutes(app: FastifyInstance) {
   app.post(
@@ -24,10 +20,11 @@ export async function instanceRoutes(app: FastifyInstance) {
 
         const { message, number, dominio } = schema.parse(req.body)
 
-        const client: WhatsAppClientManager = await getWhatsappClient(
-          app,
-          dominio,
-        )
+        const client = await getWhatsappClient(app, dominio)
+
+        if (!client) {
+          throw new Error('Erro ao puxar cliente')
+        }
 
         const sendedMessage = await client.client.sendMessage(
           `${number}@c.us`,
@@ -71,10 +68,11 @@ export async function instanceRoutes(app: FastifyInstance) {
           })
         }
 
-        const client: WhatsAppClientManager = await getWhatsappClient(
-          app,
-          dominio,
-        )
+        const client = await getWhatsappClient(app, dominio)
+
+        if (!client) {
+          throw new Error('Erro ao puxar cliente')
+        }
 
         const groups = await client.client.getGroups()
 
@@ -113,18 +111,20 @@ export async function instanceRoutes(app: FastifyInstance) {
       return
     }
 
-    const client: WhatsAppClientManager = await getWhatsappClient(app, domain)
+    const client = await getWhatsappClient(app, domain)
 
-    if (client.qr) {
-      connection.socket.send(client.qr)
+    if (client) {
+      if (client.qr) {
+        connection.socket.send(client.qr)
+      }
+
+      client.client.on('qr', (qr) => {
+        connection.socket.send(qr)
+      })
+      client.client.on('ready', () => {
+        connection.socket.send('ready')
+      })
     }
-
-    client.client.on('qr', (qr) => {
-      connection.socket.send(qr)
-    })
-    client.client.on('ready', () => {
-      connection.socket.send('ready')
-    })
   })
 
   app.get(
@@ -132,32 +132,38 @@ export async function instanceRoutes(app: FastifyInstance) {
     {
       preHandler: [checkApiIsReady],
     },
-    async (req: FastifyRequest, res: FastifyReply) => {
+    async (_: FastifyRequest, res: FastifyReply) => {
       res.send({
         status: 'ok',
       })
     },
   )
 
-  app.get('/screen', async (request: FastifyRequest, reply: FastifyReply) => {
-    const { filename } = request.query
+  // app.get('/screen', async (request: FastifyRequest, reply: FastifyReply) => {
+  //   const { filename } = request.query
 
-    if (!filename) {
-      return reply.code(400).send('Nome do arquivo não fornecido')
-    }
+  //   if (!filename) {
+  //     return reply.code(400).send('Nome do arquivo não fornecido')
+  //   }
 
-    return reply.sendFile(`${filename}.png`)
-  })
+  //   return reply.sendFile(`${filename}.png`)
+  // })
 
   app.get(
-    '/disconnect',
+    '/disconnect/:domain',
     {
       preHandler: [checkApiIsReady],
     },
     async (request: FastifyRequest, reply: FastifyReply) => {
-      await app.whatsappClient.client.disconnect()
-
-      reply.code(200).send()
+      const { domain } = request.params as any
+      const client = app.whatsappClients[domain]
+      if (client) {
+        await client.client.destroy()
+        delete app.whatsappClients[domain]
+        reply.send({ message: 'Desconectado com sucesso' })
+      } else {
+        reply.status(404).send({ message: 'Cliente não encontrado' })
+      }
     },
   )
 }
