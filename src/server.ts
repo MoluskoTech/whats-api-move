@@ -7,7 +7,7 @@ import fastifyStatic from '@fastify/static'
 import { instanceRoutes } from './routes/instance.route'
 import { statusRoutes } from './routes/status.routes'
 import fastifyWebsocket from '@fastify/websocket'
-import { initializeWhatsappClient } from './services/whatsappClientService'
+import { Client } from './Client'
 
 export const app = fastify()
 

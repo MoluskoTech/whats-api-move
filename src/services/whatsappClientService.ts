@@ -1,3 +1,4 @@
+import { FastifyInstance } from 'fastify'
 import { Client } from '../Client'
 import { env } from '../env'
 
@@ -52,5 +53,15 @@ export async function initializeWhatsappClient() {
   } catch (err) {
     console.error('Erro ao inicializar o cliente do whatsapp', err)
     throw err
+  }
+}
+
+export async function getWhatsappClient(app: FastifyInstance, domain: string) {
+  if (!app.whatsappClient[domain]) {
+    console.log('entrou no dominio ainda nao existente')
+    return await initializeWhatsappClient()
+  } else {
+    console.log('entrou no dominio existente')
+    return app.whatsappClient[domain]
   }
 }

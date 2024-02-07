@@ -1,6 +1,11 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { checkApiIsReady } from '../middlewares/check-api-is-ready'
+import { Client } from '../Client'
+import {
+  WhatsAppClientManager,
+  getWhatsappClient,
+} from '../services/whatsappClientService'
 
 export async function instanceRoutes(app: FastifyInstance) {
   app.post(
@@ -14,11 +19,17 @@ export async function instanceRoutes(app: FastifyInstance) {
         const schema = z.object({
           message: z.string(),
           number: z.string(),
+          dominio: z.string(),
         })
 
-        const { message, number } = schema.parse(req.body)
+        const { message, number, dominio } = schema.parse(req.body)
 
-        const sendedMessage = await app.whatsappClient.client.sendMessage(
+        const client: WhatsAppClientManager = await getWhatsappClient(
+          app,
+          dominio,
+        )
+
+        const sendedMessage = await client.client.sendMessage(
           `${number}@c.us`,
           message,
         )
@@ -45,11 +56,12 @@ export async function instanceRoutes(app: FastifyInstance) {
         const schema = z.object({
           message: z.string(),
           nomeGrupo: z.string().array(),
+          dominio: z.string(),
         })
 
         console.log(request.body)
 
-        const { message, nomeGrupo } = schema.parse(request.body)
+        const { message, nomeGrupo, dominio } = schema.parse(request.body)
 
         if (nomeGrupo.length < 1) {
           reply.send({
@@ -59,12 +71,15 @@ export async function instanceRoutes(app: FastifyInstance) {
           })
         }
 
-        const groups = await app.whatsappClient.client.getGroups()
+        const client: WhatsAppClientManager = await getWhatsappClient(
+          app,
+          dominio,
+        )
+
+        const groups = await client.client.getGroups()
 
         for (const name of nomeGrupo) {
-          console.log('for: ', name)
           const group = groups.find((grp) => grp.name === name)
-          console.log('group: ', group)
           if (group) {
             await group.sendMessage(message)
           }
@@ -87,23 +102,27 @@ export async function instanceRoutes(app: FastifyInstance) {
     const url = new URL(req.url, `http://${req.headers.host}`)
     const domain = url.pathname.split('/').pop()
 
-    if (domain) {
-      console.log(domain)
-    }
-
     if (!domain) {
-      connection.socket.send('Dominio não fornecido')
+      const response = {
+        type: 'error',
+        message: 'Dominio não fornecido',
+        errorNumber: 100,
+      }
+      connection.socket.send(JSON.stringify(response))
+      connection.end()
       return
     }
 
-    if (app.whatsappClient.qr) {
-      connection.socket.send(app.whatsappClient.qr)
+    const client: WhatsAppClientManager = await getWhatsappClient(app, domain)
+
+    if (client.qr) {
+      connection.socket.send(client.qr)
     }
 
-    app.whatsappClient.client.on('qr', (qr) => {
+    client.client.on('qr', (qr) => {
       connection.socket.send(qr)
     })
-    app.whatsappClient.client.on('ready', () => {
+    client.client.on('ready', () => {
       connection.socket.send('ready')
     })
   })
@@ -114,7 +133,6 @@ export async function instanceRoutes(app: FastifyInstance) {
       preHandler: [checkApiIsReady],
     },
     async (req: FastifyRequest, res: FastifyReply) => {
-      const { domain } = req.params
       res.send({
         status: 'ok',
       })

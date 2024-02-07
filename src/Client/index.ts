@@ -288,6 +288,11 @@ export class Client extends EventEmitter {
     this.status = 'ready'
   }
 
+  async destroy() {
+    await this.page.close()
+    await this.browser.close()
+  }
+
   async disconnect() {
     await this.initialize()
   }

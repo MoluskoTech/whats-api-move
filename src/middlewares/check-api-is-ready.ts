@@ -14,7 +14,15 @@ export async function checkApiIsReady(
     })
   }
 
-  const whatsappClientManager = request.server.whatsappClient
+  const whatsappClientManager = request.server.whatsappClient[domain]
+
+  if (!whatsappClientManager) {
+    reply.status(400).send({
+      type: 'error',
+      message: 'Cliente não encontrado',
+      errorNumber: 103,
+    })
+  }
 
   if (whatsappClientManager.qr) {
     reply.status(400).send({
