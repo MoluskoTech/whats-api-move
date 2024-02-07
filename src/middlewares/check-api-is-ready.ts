@@ -26,6 +26,8 @@ export async function checkApiIsReady(
     return
   }
 
+  console.log({ clients: request.server.whatsappClients })
+
   const whatsappClientManager = request.server.whatsappClients[domain]
 
   console.log({ whatsappClientManager })
