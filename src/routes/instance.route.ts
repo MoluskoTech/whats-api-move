@@ -83,7 +83,7 @@ export async function instanceRoutes(app: FastifyInstance) {
     },
   )
 
-  app.get('/qr', { websocket: true }, async (connection, req) => {
+  app.get('/qr/:domain', { websocket: true }, async (connection, req) => {
     const url = new URL(req.url, `http://${req.headers.host}`)
     const domain = url.pathname.split('/').pop()
 
