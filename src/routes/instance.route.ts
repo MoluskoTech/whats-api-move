@@ -123,6 +123,9 @@ export async function instanceRoutes(app: FastifyInstance) {
       client.client.on('qr', (qr) => {
         connection.socket.send(qr)
       })
+      client.client.on('Loading', () => {
+        connection.socket.send('loading')
+      })
       client.client.on('ready', () => {
         connection.socket.send('ready')
         connection.end()
