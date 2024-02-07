@@ -83,7 +83,19 @@ export async function instanceRoutes(app: FastifyInstance) {
     },
   )
 
-  app.get('/qr', { websocket: true }, async (connection) => {
+  app.get('/qr', { websocket: true }, async (connection, req) => {
+    const url = new URL(req.url, `http://${req.headers.host}`)
+    const domain = url.pathname.split('/').pop()
+
+    if (domain) {
+      console.log(domain)
+    }
+
+    if (!domain) {
+      connection.socket.send('Dominio não fornecido')
+      return
+    }
+
     if (app.whatsappClient.qr) {
       connection.socket.send(app.whatsappClient.qr)
     }
@@ -97,11 +109,12 @@ export async function instanceRoutes(app: FastifyInstance) {
   })
 
   app.get(
-    '/connected',
+    '/connected/:domain',
     {
       preHandler: [checkApiIsReady],
     },
-    async (_, res: FastifyReply) => {
+    async (req: FastifyRequest, res: FastifyReply) => {
+      const { domain } = req.params
       res.send({
         status: 'ok',
       })

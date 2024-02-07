@@ -4,10 +4,20 @@ export async function checkApiIsReady(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
+  const domain = request.params.domain || request.body.dominio
+
+  if (!domain) {
+    reply.status(400).send({
+      type: 'error',
+      message: 'Dominio não fornecido',
+      errorNumber: 100,
+    })
+  }
+
   const whatsappClientManager = request.server.whatsappClient
 
   if (whatsappClientManager.qr) {
-    reply.send({
+    reply.status(400).send({
       type: 'error',
       message: 'Necessário validar o qrCode',
       errorNumber: 101,
@@ -16,7 +26,7 @@ export async function checkApiIsReady(
     return
   }
   if (whatsappClientManager.client.status !== 'ready') {
-    reply.send({
+    reply.status(400).send({
       type: 'error',
       message: 'Api em inicialização , favor aguardar',
       errorNumber: 102,

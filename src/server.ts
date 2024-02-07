@@ -11,41 +11,36 @@ import { initializeWhatsappClient } from './services/whatsappClientService'
 
 export const app = fastify()
 
-initializeWhatsappClient()
-  .then((whatsappClient) => {
-    app.decorate('whatsappClient', whatsappClient)
+const whatsappClients = {}
 
-    app.register(cors, {
-      origin: true,
-    })
+app.decorate('whatsappClients', whatsappClients)
 
-    app.register(fastifyWebsocket)
+app.register(cors, {
+  origin: true,
+})
 
-    app.register(fastifyStatic, {
-      root: join(__dirname, '..', 'public'),
-      prefix: '/public/',
-    })
+app.register(fastifyWebsocket)
 
-    app.register(instanceRoutes, {
-      prefix: '/instance',
-    })
+app.register(fastifyStatic, {
+  root: join(__dirname, '..', 'public'),
+  prefix: '/public/',
+})
 
-    app.register(statusRoutes, {
-      prefix: '/status',
-    })
+app.register(instanceRoutes, {
+  prefix: '/instance',
+})
 
-    const host = env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost'
+app.register(statusRoutes, {
+  prefix: '/status',
+})
 
-    app
-      .listen({
-        host,
-        port: env.PORT,
-      })
-      .then(() => {
-        console.log(`HTTP server listening on ${env.PORT}`)
-      })
+const host = env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost'
+
+app
+  .listen({
+    host,
+    port: env.PORT,
   })
-  .catch((err) => {
-    console.error('Erro ao inicializar o cliente do whatsapp', err)
-    process.exit(1)
+  .then(() => {
+    console.log(`HTTP server listening on ${env.PORT}`)
   })
