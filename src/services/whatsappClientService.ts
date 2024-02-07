@@ -58,10 +58,14 @@ export async function initializeWhatsappClient() {
 
 export async function getWhatsappClient(app: FastifyInstance, domain: string) {
   if (!app.whatsappClients[domain]) {
-    console.log('entrou no dominio ainda nao existente')
-    return await initializeWhatsappClient()
+    const client = await initializeWhatsappClient()
+    if (client) {
+      app.whatsappClients[domain] = client
+      return client
+    } else {
+      console.log('Erro ao inicializar Cliente')
+    }
   } else {
-    console.log('entrou no dominio existente')
     return app.whatsappClients[domain]
   }
 }
