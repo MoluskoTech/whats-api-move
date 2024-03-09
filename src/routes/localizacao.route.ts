@@ -14,5 +14,9 @@ export async function localizacaoRoutes(app: FastifyInstance) {
       connection.socket.send(JSON.stringify(response))
       connection.end()
     }
+
+    connection.socket.on('message', (message) => {
+      console.log(message)
+    })
   })
 }
