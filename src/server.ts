@@ -8,6 +8,7 @@ import { instanceRoutes } from './routes/instance.route'
 import { statusRoutes } from './routes/status.routes'
 import fastifyWebsocket from '@fastify/websocket'
 import { Client } from './Client'
+import { localizacaoRoutes } from './routes/localizacao.route'
 
 export const app = fastify()
 
@@ -28,6 +29,10 @@ app.register(fastifyStatic, {
 
 app.register(instanceRoutes, {
   prefix: '/instance',
+})
+
+app.register(localizacaoRoutes, {
+  prefix: '/localizacao',
 })
 
 app.register(statusRoutes, {
