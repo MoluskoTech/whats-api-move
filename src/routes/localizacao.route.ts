@@ -1,9 +1,16 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
+import { FastifyInstance } from 'fastify'
 
 export async function localizacaoRoutes(app: FastifyInstance) {
-  app.post('/localizacao', async (req: FastifyRequest, res: FastifyReply) => {
-    console.log({ body: req.body })
+  app.get('/', { websocket: true }, async (connection, req) => {
+    const url = new URL(req.url, `http://${req.headers.host}`)
+    const domain = url.pathname.split('/').pop()
 
-    res.send().status(200)
+    connection.socket.on('message', (message) => {
+      console.log(message)
+    })
+
+    connection.socket.on('open', () => {
+      console.log('conectou')
+    })
   })
 }
