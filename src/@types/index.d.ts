@@ -1,5 +1,6 @@
 import { Client } from '../Client'
 import { WhatsAppClientManager } from '../services/whatsappClientService'
+import * as WebSocket from 'ws'
 
 declare global {
   interface Window {
