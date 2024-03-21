@@ -6,10 +6,12 @@ export async function localizacaoRoutes(app: FastifyInstance) {
   app.get('/', { websocket: true }, async (connection, req) => {
     connection.socket.on('message', (message) => {
       const data = JSON.parse(message.toString().replaceAll("'", '"'))
-      console.log({ data })
 
       if (data.type) {
         if (data.type === 'JOIN') {
+          console.log('entrou no join')
+          console.log({ data })
+
           const salaId = data.salaId
           if (!salas[salaId]) {
             salas[salaId] = new Set()
