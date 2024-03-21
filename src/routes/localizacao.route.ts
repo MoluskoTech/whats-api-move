@@ -4,9 +4,7 @@ export async function localizacaoRoutes(app: FastifyInstance) {
   const salas = {} as any
 
   app.get('/', { websocket: true }, async (connection, req) => {
-    console.log('websocket')
     connection.socket.on('message', (message) => {
-      console.log('recebeu mensagem: ', message.toString())
       const data = JSON.parse(message.toString().replaceAll("'", '"'))
       console.log({ data })
 
@@ -18,6 +16,11 @@ export async function localizacaoRoutes(app: FastifyInstance) {
           }
           salas[salaId].add(connection.socket)
           connection.socket.salaId = salaId
+        } else if (data.type === 'LOCALIZATION') {
+          const { salaId } = data
+          if (!salas[salaId]) {
+            salas[salaId] = new Set()
+          }
         }
       } else {
         const sala = connection.socket.salaId
