@@ -4,7 +4,9 @@ export async function localizacaoRoutes(app: FastifyInstance) {
   const salas = {} as any
 
   app.get('/', { websocket: true }, async (connection, req) => {
+    console.log('websocket')
     connection.socket.on('message', (message) => {
+      console.log('recebeu mensagem: ', message.toString())
       const data = JSON.parse(message.toString())
       console.log({ data })
 
