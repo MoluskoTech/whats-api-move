@@ -7,7 +7,7 @@ export async function localizacaoRoutes(app: FastifyInstance) {
     console.log('websocket')
     connection.socket.on('message', (message) => {
       console.log('recebeu mensagem: ', message.toString())
-      const data = JSON.parse(message.toString())
+      const data = JSON.parse(message.toString().replaceAll("'", '"'))
       console.log({ data })
 
       if (data.type) {
